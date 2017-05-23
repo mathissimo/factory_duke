@@ -68,12 +68,15 @@ class FactoryRuntime implements FactoryContext {
 		});
 	}
 
-	<T> HookBuilder<T> chain(HookBuilder<T> hookBuilder, String identifier) {
+	<T> HookBuilder<T> chain(HookBuilder<T> hookBuilder, String identifier, Class<T> clazz) {
 		final Template template = findTemplate(identifier);
-		if (template instanceof ConsumerTemplate) {
-			return build(hookBuilder,((ConsumerTemplate) template).getConsumer());
+		if (template.getClazz().equals(clazz)) {
+			if (template instanceof ConsumerTemplate) {
+        return build(hookBuilder, ((ConsumerTemplate) template).getConsumer());
+      } else
+				throw new IllegalArgumentException("Cannot chain template '" + identifier +"'. Not a consumer template.");
 		} else {
-			return hookBuilder;
+			throw new IllegalArgumentException("Cannot chain template '" + identifier +"'. Template is of different class-type.");
 		}
 	}
 

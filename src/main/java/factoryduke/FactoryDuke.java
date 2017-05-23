@@ -63,7 +63,7 @@ public class FactoryDuke {
 		identifiers.remove(0);
 		FactoryRuntime factoryRuntime = FactoryRuntimeHolder.getRuntime();
 		for (String identifier: identifiers){
-			hookBuilder = factoryRuntime.chain(hookBuilder, identifier);
+			hookBuilder = factoryRuntime.chain(hookBuilder, identifier, clazz);
 		}
 		return hookBuilder;
 	}
