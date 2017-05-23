@@ -30,6 +30,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
+import factoryduke.builder.HookBuilder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.assertj.core.groups.Tuple;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +57,18 @@ public class FactoryDukeTest {
 				.contains("Malcom", "Scott");
 
 		verify(mock, times(1)).afterCall();
+		verifyNoMoreInteractions(mock);
+	}
+
+	@Test
+	public void build_consumer_chained_definition() {
+		HookBuilder<User> user = FactoryDuke.build(User.class, new ArrayList<>(Arrays.asList(
+				"user_with_fr_address",
+				"admin_user")));
+		assertThat(user.toOne()).extracting(User::getName, User::getLastName)
+				.contains("Malcom", "John");
+
+		verify(mock, times(3)).afterCall(); // todo: check why 3 calls..
 		verifyNoMoreInteractions(mock);
 	}
 
