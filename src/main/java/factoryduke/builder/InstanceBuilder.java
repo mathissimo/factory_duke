@@ -24,8 +24,11 @@ package factoryduke.builder;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public interface InstanceBuilder<T> {
+
+	void addOverride(Consumer<T> override);
 
 	T toOne();
 

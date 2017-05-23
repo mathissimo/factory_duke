@@ -68,6 +68,20 @@ class FactoryRuntime implements FactoryContext {
 		});
 	}
 
+	<T> HookBuilder<T> chain(HookBuilder<T> hookBuilder, String identifier) {
+		final Template template = findTemplate(identifier);
+		if (template instanceof ConsumerTemplate) {
+			return build(hookBuilder,((ConsumerTemplate) template).getConsumer());
+		} else {
+			return hookBuilder;
+		}
+	}
+
+	private <T> HookBuilder<T> build(HookBuilder<T> hookBuilder, Consumer<T> override) {
+		hookBuilder.addOverride(override);
+		return hookBuilder;
+	}
+
 	private Template findTemplate(String identifier) {
 		return templates.computeIfAbsent(identifier, o -> {
 			throw new TemplateNotFoundException("No builder register with identifier : " + identifier + " with bloc initialization");

@@ -31,19 +31,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import factoryduke.Template;
-import factoryduke.function.Callback;
 
 public class InstanceBuilderImpl<T> implements InstanceBuilder<T>, InstanceBuilder.CollectionBuilder<T> {
 
 	private final Template template;
 
-	private final Consumer<T> override;
+	private final List<Consumer<T>> overrides;
 
 	private int times;
 
 	public InstanceBuilderImpl(Template template, Consumer<T> override) {
 		this.template = template;
-		this.override = override;
+		this.overrides = new ArrayList<>();
+		addOverride(override);
 	}
 
 	public T toOne() {
@@ -79,11 +79,15 @@ public class InstanceBuilderImpl<T> implements InstanceBuilder<T>, InstanceBuild
 		doBefore();
 
 		final T instance = template.create();
-		override.accept(instance);
+		overrides.forEach(override -> override.accept(instance));
 
 		doAfter(instance);
 
 		return instance;
+	}
+
+	public void addOverride (Consumer<T> override) {
+		this.overrides.add(override);
 	}
 
 	public void doAfter(T instance) {

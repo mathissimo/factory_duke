@@ -22,6 +22,8 @@
  */
 package factoryduke;
 
+import factoryduke.utils.Assert;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -54,6 +56,16 @@ public class FactoryDuke {
 	public static <T> HookBuilder<T> build(Class<T> clazz, String identifier) {
 		return build(clazz, identifier, o -> {
 		});
+	}
+
+	public static <T> HookBuilder<T> build(Class<T> clazz, List<String> identifiers) {
+		HookBuilder<T> hookBuilder = build(clazz, identifiers.get(0));
+		identifiers.remove(0);
+		FactoryRuntime factoryRuntime = FactoryRuntimeHolder.getRuntime();
+		for (String identifier: identifiers){
+			hookBuilder = factoryRuntime.chain(hookBuilder, identifier);
+		}
+		return hookBuilder;
 	}
 
 	public static <T> HookBuilder<T> build(Class<T> clazz, Consumer<T> override) {

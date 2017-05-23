@@ -51,6 +51,11 @@ public class HookInstanceBuilder<T> implements HookBuilder<T> {
 	}
 
 	@Override
+	public void addOverride(Consumer<T> override) {
+		builder.addOverride(override);
+	}
+
+	@Override
 	public T toOne() {
 		return builder.toOne();
 	}

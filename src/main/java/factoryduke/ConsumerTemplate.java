@@ -44,4 +44,8 @@ public class ConsumerTemplate extends Template {
 			throw new TemplateInstanciationException(e);
 		}
 	}
+
+	public Consumer getConsumer() {
+		return consumer;
+	}
 }
